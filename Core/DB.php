@@ -632,6 +632,42 @@ class DB {
     }
 
     /**
+     * Does a basic insert, table and column names aint injection safe
+     * @param string $table_name
+     * @param array $data
+     * @return number|boolean|string
+     */
+    public static function BasicInsert($table_name, $data) {
+        $new_id = -1;
+
+        if (strlen($table_name) > 0 && count($data) > 0) {
+            $columns = [];
+            $sql_params = [];
+            $arguments = [];
+            foreach ($data as $field => $value) {
+                $columns[] = "$field";
+                $sql_params[] = ":_$field";
+                $arguments["_$field"] = $value;
+            }
+            $columns_string = implode(', ', $columns);
+            $values_string = implode(', ', $sql_params);
+
+            $insert_query = "
+                INSERT INTO " . $table_name . " (
+                    $columns_string
+                )
+                VALUES (
+                    $values_string
+                )
+            ";
+
+            $new_id = DB::insert_and_get_id($insert_query, $arguments);
+        }
+
+        return $new_id;
+    }
+
+    /**
      * Insert all items in the data array into the table (NOT INJECTION SAFE!!).
      *
      * Example

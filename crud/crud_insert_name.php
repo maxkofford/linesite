@@ -1,6 +1,7 @@
 <?php
 require_once (__DIR__ . "/../apptop.php");
 ?>
-<form action="/linesite/crud/crud_insert.php">
-	<span>target table:</span> <input type="text" name="table_name">
+<form action="/linesite/crud/crud_insert_fields.php">
+	<div><span>target table:</span> <input type="text" name="table_name"></div>
+	<div><input type="submit" value="Submit"></div>
 </form>

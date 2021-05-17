@@ -16,4 +16,8 @@ class Input {
         }
         return $default_value;
     }
+    
+    public static function GetAll(){
+        return $_GET;
+    }
 }
