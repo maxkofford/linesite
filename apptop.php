@@ -1,7 +1,10 @@
 <?php
-require_once(__DIR__ . "/vendor/autoload.php");
-define('HTTP_SERVER', 'https://'.$_SERVER['SERVER_NAME']);
-define('HTTPS_SERVER', 'https://'.$_SERVER['SERVER_NAME']);
+require_once (__DIR__ . "/vendor/autoload.php");
+define('HTTP_SERVER', 'https://' . $_SERVER['SERVER_NAME']);
+define('HTTPS_SERVER', 'https://' . $_SERVER['SERVER_NAME']);
+
+define('DB_name', 'linesite');
+
 
 define('DB_SERVER', 'localhost');
 define('DB_SERVER_USERNAME', 'root');

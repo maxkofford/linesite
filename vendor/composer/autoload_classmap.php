@@ -7,7 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Core\\Connection_Type' => $baseDir . '/core/DB.class.php',
-    'Core\\DB' => $baseDir . '/core/DB.class.php',
-    'Core\\DBException' => $baseDir . '/core/DB.class.php',
+    'Core\\Connection_Type' => $baseDir . '/core/Connection_Type.php',
+    'Core\\DB' => $baseDir . '/core/DB.php',
+    'Core\\DBException' => $baseDir . '/core/DBException.php',
+    'Core\\HTML' => $baseDir . '/core/HTML.php',
+    'Core\\Input' => $baseDir . '/core/Input.php',
 );

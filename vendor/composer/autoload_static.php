@@ -8,9 +8,11 @@ class ComposerStaticInitc790af260e9e3ac961b63475f68734bc
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Core\\Connection_Type' => __DIR__ . '/../..' . '/core/DB.class.php',
-        'Core\\DB' => __DIR__ . '/../..' . '/core/DB.class.php',
-        'Core\\DBException' => __DIR__ . '/../..' . '/core/DB.class.php',
+        'Core\\Connection_Type' => __DIR__ . '/../..' . '/core/Connection_Type.php',
+        'Core\\DB' => __DIR__ . '/../..' . '/core/DB.php',
+        'Core\\DBException' => __DIR__ . '/../..' . '/core/DBException.php',
+        'Core\\HTML' => __DIR__ . '/../..' . '/core/HTML.php',
+        'Core\\Input' => __DIR__ . '/../..' . '/core/Input.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
