@@ -20,3 +20,8 @@ define('DB_REPORT_SERVER', 'localhost');
 define('DB_REPORT_USERNAME', 'root');
 define('DB_REPORT_PASSWORD', '');
 define('DB_REPORT_DATABASE', 'linesite');
+
+?>
+<HEAD>
+<link rel="stylesheet" href="\linesite\bootstrap.min.css">
+</HEAD>
