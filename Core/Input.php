@@ -14,10 +14,20 @@ class Input {
         if (array_key_exists($input_name, $_GET)) {
             return $_GET[$input_name];
         }
+        if (array_key_exists($input_name, $_POST)) {
+            return $_POST[$input_name];
+        }
         return $default_value;
     }
     
     public static function GetAll(){
-        return $_GET;
+        return array_merge($_GET,$_POST);
+    }
+    
+    public static function GetCookie($cookie_name, $default_value){
+        if(array_key_exists($cookie_name, $_COOKIE)){
+            return $_COOKIE[$cookie_name];
+        }
+        return $default_value;
     }
 }

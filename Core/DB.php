@@ -666,97 +666,113 @@ class DB {
 
         return $new_id;
     }
-
+    
+    
     /**
-     * Insert all items in the data array into the table (NOT INJECTION SAFE!!).
+     * Updates the object with the $fields info. $fields must be a table_column => value array.
+     * Object values are allowed if a mapping is provided, the SET parameter builder will expand these.
+     * Allowing objects was added to allow for shorter hand field lists and reduce the need for manual expansion.
      *
-     * Example
-     * $now = date("Y-m-d H:i:s");
+     * Example (from a \Core\Order class):
+     * $fields = array(
+     *      'customers_email_address' => $this->get_customers_email(),
+     *      'customers_telephone' => $this->get_customers_telephone(),
+     *      'shipping_address' => array(
+     *          'object' => $this->get_shipping_address(),
+     *          'mapping' => \Core\Address::$shipping_address_map
+     *      ),
+     *      'billing_address' => array(
+     *          'object' => $this->get_billing_address(),
+     *          'mapping' => \Core\Address::$billing_address_map
+     *      )
+     *  );
      *
-     * // These keys/object property names must match those in the $columns array
-     * $data = [
-     * [
-     * 'timestamp' => $now,
-     * 'message' => "Insert Unit Tests 1",
-     * 'trace' => "Insert Unit Tests 1",
-     * 'query' => "Insert Unit Tests 1",
-     * 'parameters' => "Insert Unit Tests 1"
-     * ],
-     * [
-     * 'timestamp' => $now,
-     * 'message' => "Insert Unit Tests 2",
-     * 'trace' => "Insert Unit Tests 2",
-     * 'query' => "Insert Unit Tests 2",
-     * 'parameters' => "Insert Unit Tests 2"
-     * ]
-     * ];
-     *
-     * // These must match the keys/object property names passed in as the $data.
-     * $columns = [
-     * "timestamp", "message", "trace", "query", "parameters"
-     * ];
-     *
-     * $table = "core_db_errors";
-     *
-     * $rows_inserted = DB::batch_insert($data, $columns, $table);
-     *
-     * @param array/object $data_array
-     *            The array of object (or associative arrays) that we want to insert
-     * @param array $columns
-     *            Array of columns that we will insert
-     * @param string $table
-     *            The table we want to insert into
-     * @param bool $ignore_duplicates
-     *            Whether to ignore duplicates or not
-     *            
-     * @return bool Whether or not the insert was successful
+     * @param array $fields                     Associative array of field_name => new_value
+     * @return bool                             Whether or not the update was successful
      */
-    public static function batch_insert($data_array, $columns, $table, $ignore_duplicates = false) {
-        $insert_success = false;
-
-        if (count($data_array) > 0) {
-            $columns_string = implode(",", $columns);
-
-            $ignore = "";
-            if ($ignore_duplicates) {
-                $ignore = "IGNORE";
-            }
-
-            $insert_query = "
-                INSERT {$ignore} INTO 
-                  {$table} ({$columns_string})
-                VALUES
+    public static function BasicUpdate($table_name, $update_fields){
+        $success = false;
+        
+        if(strlen($table_name) > 1 && array_key_exists($table_name."_id", $update_fields)) {
+            $update_query = "
+                UPDATE
+                    $table_name
+                SET
             ";
-
-            foreach ($data_array as $item) {
-                $values_string = "(";
-
-                $object_string = "";
-                foreach ($columns as $column) {
-                    $escaped_value = str_replace("'", "\'", $item[$column]);
-                    // The above might escape an already escaped quote, "\'" => "\\'" so fix those next.
-                    $escaped_value = str_replace("\\\\'", "\'", $escaped_value);
-
-                    $object_string .= "'" . $escaped_value . "',";
-                }
-                $values_string .= rtrim($object_string, ",");
-
-                $values_string .= "),";
-
-                $insert_query .= $values_string;
+            
+            foreach($update_fields as $field => $value) {
+                $update_query .= $field . " = :" . $field . ",\n";
             }
-
-            $insert_query = rtrim($insert_query, ',') . ";";
-
-            $insert_success = static::run($insert_query);
+            
+            $update_query = rtrim($update_query, ",\n");
+            
+            $update_query .= "
+                WHERE
+                  ".$table_name."_id"." = :".$table_name."_id".";
+            ";
+            
+            
+            $success = DB::run($update_query, $update_fields) > 0;
         }
-
-        return $insert_success;
+        
+        return $success;
+    }
+    
+    /**
+     * Updates the object with the $update_fields info using $where_fields as the where selectors.
+     * $fields must be a table_column => value array.
+     * Object values are allowed if a mapping is provided, the SET parameter builder will expand these.
+     * Allowing objects was added to allow for shorter hand field lists and reduce the need for manual expansion.
+     *
+     * Example (from a \Core\Order class):
+     * $fields = array(
+     *      'customers_email_address' => $this->get_customers_email(),
+     *      'customers_telephone' => $this->get_customers_telephone(),
+     *      'shipping_address' => array(
+     *          'object' => $this->get_shipping_address(),
+     *          'mapping' => \Core\Address::$shipping_address_map
+     *      ),
+     *      'billing_address' => array(
+     *          'object' => $this->get_billing_address(),
+     *          'mapping' => \Core\Address::$billing_address_map
+     *      )
+     *  );
+     *
+     * @param array $update_fields              Associative array of field_name => new_value
+     * @param array $where_fields               Associative array of field_name => new_value
+     * @return bool                             Whether or not the update was successful
+     */
+    public static function BasicUpdateWhere($table_name, $update_fields, $where_fields){
+        $success = false;
+        
+        if(strlen($table_name) > 1) {
+            $update_query = "
+                UPDATE
+                    ".$table_name."
+                SET
+            ";
+            
+            foreach($update_fields as $field => $value) {
+                $update_query .= $field . " = :" . $field . ",\n";
+            }
+            
+            $update_query = rtrim($update_query, ",\n");
+            $update_query .= "
+                WHERE TRUE
+            ";
+            
+            foreach($where_fields as $field => $value) {
+                $update_query .= " AND " . $field . "= :" . $field;
+            }
+            
+            $success = DB::run($update_query, array_merge($update_fields, $where_fields)) > 0;
+        }
+        
+        return $success;
     }
 
-
     /**
-     * Same as batch_insert but is injection safe (assuming column names and table name are not user input), doesnt require columns array, and has update_duplicates in addition to ignore duplicates
+     * Is injection safe (assuming column names and table name are not user input), doesnt require columns array, and has update_duplicates in addition to ignore duplicates
      * Assumes all data array's have the same columns in the same spots and all columns are the ones in the first data array
      * $now = date("Y-m-d H:i:s");
      *
@@ -789,7 +805,7 @@ class DB {
      *            How many rows to insert in each batch size
      * @return boolean|number
      */
-    public static function batch_insert2($data_array, $table, $collision_mode = 0, $biggest_batch_size = 1000) {
+    public static function batch_insert($data_array, $table, $collision_mode = 0, $biggest_batch_size = 1000) {
         $total_changed = 0;
         $batched_data_array = array_chunk($data_array, $biggest_batch_size);
         foreach ($batched_data_array as $current_data_array) {
