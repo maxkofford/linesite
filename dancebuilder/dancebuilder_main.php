@@ -240,7 +240,7 @@ $(function() {
         		    echo "Dance -" . $dance['dance_name'];
         		} 
         		if(strlen($combined_move_id) > 0){
-        		    echo "Combined Move - " . $combined_move["combined_move_name"];
+        		    echo "Combined Move - " . $combined_move["combined_move_name"] . " - " . $combined_move["combined_move_description"];
         		}
         		?>
         	</div>
