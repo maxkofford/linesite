@@ -688,7 +688,7 @@ class DB {
      *  );
      *
      * @param array $fields                     Associative array of field_name => new_value
-     * @return bool                             Whether or not the update was successful
+     * @return int                             Number of updated rows
      */
     public static function BasicUpdate($table_name, $update_fields){
         $success = false;

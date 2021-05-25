@@ -5,7 +5,6 @@ define('HTTPS_SERVER', 'https://' . $_SERVER['SERVER_NAME']);
 
 define('DB_name', 'linesite');
 
-
 define('DB_SERVER', 'localhost');
 define('DB_SERVER_USERNAME', 'root');
 define('DB_SERVER_PASSWORD', '');
@@ -21,12 +20,4 @@ define('DB_REPORT_USERNAME', 'root');
 define('DB_REPORT_PASSWORD', '');
 define('DB_REPORT_DATABASE', 'linesite');
 
-if(isset($no_html) && $no_html == true){
-    
-} else {
-?>
-<HEAD>
-<link rel="stylesheet" href="\linesite\bootstrap.min.css">
-<script src="\linesite\jquery-3.6.0.min.js"></script> 
-</HEAD>
-<?php } ?>
+\Core\HTML::Echo_Header();

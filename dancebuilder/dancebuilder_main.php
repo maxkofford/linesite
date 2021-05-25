@@ -17,7 +17,7 @@ $dance_pieces = \Core\DB::execute("select * from dance_piece inner join foot_mov
 $directions = ["","↙", "↓", "↘", "←", "-", "→", "↖", "↑", "↗"];
 //$rotate_right = "↻ ";
 //$rotate_left = "↺ ";
-$dance_cookie = \Core\Input::GetCookie("dancebuilder", '{"dance_piece_facing_direction":"5","dance_piece_moving_direction":"5"}');
+$dance_cookie = \Core\Input::GetCookie("dancebuilder", '{"dance_piece_facing_direction":"5","dance_piece_moving_direction":"5","msg":""}');
 $dance_cookie = json_decode($dance_cookie);
 $initial_facing_direction = $dance_cookie->dance_piece_facing_direction;
 $initial_moving_direction = $dance_cookie->dance_piece_moving_direction;
@@ -26,34 +26,80 @@ $initial_moving_direction = $dance_cookie->dance_piece_moving_direction;
 var dance_id = "<?php echo $dance_id ?>";
 var dance_piece_facing_direction = <?php echo $initial_facing_direction ?>;
 var dance_piece_moving_direction = <?php echo $initial_moving_direction ?>;
+var update_dance_piece_id = -1;
 
 $(function() {
 	$(".moving_buttons button[data-num='<?php echo $initial_moving_direction ?>']").removeClass("btn-default");
 	$(".moving_buttons button[data-num='<?php echo $initial_moving_direction ?>']").addClass("btn-dark");
 	$(".facing_buttons button[data-num='<?php echo $initial_facing_direction ?>']").removeClass("btn-default");
 	$(".facing_buttons button[data-num='<?php echo $initial_facing_direction ?>']").addClass("btn-dark");
+	
     $(".moving_buttons button").click(function() {
-    	var old_button = $(this).parent().parent().parent().find("button[data-num='"+dance_piece_moving_direction+"'");
-		old_button.removeClass("btn-dark");
-		old_button.addClass("btn-default");
-    	dance_piece_moving_direction = $(this).attr("data-num");
-    	$(this).removeClass("btn-default");
-    	$(this).addClass("btn-dark");
+    	var old_button = $(".moving_buttons").find("button[data-num='"+dance_piece_moving_direction+"'");
+		var new_button = $(this);
+		direction_visible_button_change(old_button, new_button);
+    	dance_piece_moving_direction = new_button.attr("data-num");
     });
+    
 	$(".facing_buttons button").click(function() {
-		var old_button = $(this).parent().parent().parent().find("button[data-num='"+dance_piece_facing_direction+"'");
-		old_button.removeClass("btn-dark");
-		old_button.addClass("btn-default");
-    	dance_piece_facing_direction = $(this).attr("data-num");
-    	$(this).removeClass("btn-default");
-    	$(this).addClass("btn-dark");
+		var old_button = $(".facing_buttons").find("button[data-num='"+dance_piece_facing_direction+"'");
+		var new_button = $(this);
+		direction_visible_button_change(old_button, new_button); 
+    	dance_piece_facing_direction = new_button.attr("data-num");
     });
-    $(".add_move").click(function() {
+    
+    function direction_visible_button_change(old_button, target_button) {
+    	old_button.removeClass("btn-dark");
+		old_button.addClass("btn-default");
+    	target_button.removeClass("btn-default");
+    	target_button.addClass("btn-dark");
+    }
+    
+    $(".dance_piece_button").click(function() {
+    	$(".dance_piece_button").removeClass("border-danger");
+    	$(this).addClass("border-danger");
+    	update_dance_piece_id = $(this).attr("data-id");
+    });
+    
+    $(".update_move_button").click(function() {
+    	if(update_dance_piece_id != -1){
+    		var foot_move_id = $(".foot_move_id").val();
+    		var dance_piece_length = $(".dance_piece_length").val();
+        	$.ajax({
+              method: "POST",
+              url: "/linesite/dancebuilder/ajax_dancebuilder_update_move.php",
+              data: {
+              	dance_id: dance_id,
+              	dance_piece_id: update_dance_piece_id,
+              	foot_move_id: foot_move_id, 
+              	dance_piece_facing_direction: dance_piece_facing_direction,
+    			dance_piece_moving_direction: dance_piece_moving_direction,
+    			dance_piece_length: dance_piece_length
+              }
+            })
+              .done(function( data ) {
+              	try{
+              		data = JSON.parse(data);
+              	} catch (e) {
+                  	$(".message").html(data);
+                  	$(".message").removeClass("d-none");
+                  	return;
+              	}
+              	var cookie_data = {
+              	dance_piece_facing_direction: dance_piece_facing_direction, 
+              	dance_piece_moving_direction: dance_piece_moving_direction,
+              	msg: data.msg};
+              	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
+              	location.reload(); 
+              });
+    	}
+    });
+    $(".add_move_button").click(function() {
     	var foot_move_id = $(".foot_move_id").val();
     	var dance_piece_length = $(".dance_piece_length").val();
     	$.ajax({
           method: "POST",
-          url: "/linesite/dancebuilder/dancebuilder_add_move.php",
+          url: "/linesite/dancebuilder/ajax_dancebuilder_add_move.php",
           data: {
           	dance_id: dance_id,
           	foot_move_id: foot_move_id, 
@@ -67,11 +113,13 @@ $(function() {
           		data = JSON.parse(data);
           	} catch (e) {
               	$(".message").html(data);
+              	$(".message").removeClass("d-none");
               	return;
           	}
           	var cookie_data = {
           	dance_piece_facing_direction: dance_piece_facing_direction, 
-          	dance_piece_moving_direction: dance_piece_moving_direction};
+          	dance_piece_moving_direction: dance_piece_moving_direction,
+          	msg: data.msg};
           	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
           	location.reload(); 
           });
@@ -101,14 +149,15 @@ $(function() {
 <div class="mx-5 my-4">
 	<div class="container-fluid">
     	<div class="row">
-        	<div class="col message bg-primary text-light p-2 rounded border d-none">
+        	<div class="col message bg-primary text-light p-2 rounded border <?php echo strlen($dance_cookie->msg) > 1 ? "" : "d-none" ?>">
+        		<?php echo $dance_cookie->msg ?>
         	</div>
     	</div>
     	<div class="row">
         	<div class="col">
         		<div class="row w-100 dance_pieces">
 					<?php foreach ( $dance_pieces as $current_piece){ ?>
-					<div class="col <?php echo $current_piece['dance_piece_length'] == 1 ? "col8th" : "col16th" ?> rounded border" data-id="<?php echo $current_piece['dance_piece_id']?>">
+					<div class="col <?php echo $current_piece['dance_piece_length'] == 1 ? "col8th" : "col16th" ?> rounded border dance_piece_button" data-id="<?php echo $current_piece['dance_piece_id']?>">
 						<?php echo $current_piece['foot_move_name'] . " F".$directions[$current_piece['dance_piece_facing_direction']] . " M".$directions[$current_piece['dance_piece_moving_direction']]?>
 					</div>
 					<?php } ?>
@@ -209,7 +258,10 @@ $(function() {
 		</div>
         <div class="row move_data">
         	<div class="col">
-        		<button class="btn btn-default add_move">Add Move</button>
+        		<button class="btn btn-default add_move_button">Add Move</button>
+        	</div>
+        	<div class="col">
+        		<button class="btn btn-default update_move_button">Update Move</button>
         	</div>
         </div>
 	</div>

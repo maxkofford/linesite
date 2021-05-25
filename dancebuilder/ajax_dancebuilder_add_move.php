@@ -1,7 +1,6 @@
 <?php
 namespace dancebuilder;
-global $no_html;
-$no_html = true;
+define("skip_html", true);
 require_once (__DIR__ . "/../apptop.php");
 $data = \Core\Input::GetAll();
 if($data['dance_id'] < 1 || $data['foot_move_id'] < 1){
