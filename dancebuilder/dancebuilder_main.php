@@ -2,19 +2,36 @@
 namespace dancebuilder;
 require_once (__DIR__ . "/../apptop.php");
 $dance_id = \Core\Input::Get('dance_id', '');
-if(strlen($dance_id) < 1){
+$combined_move_id = \Core\Input::Get('combined_move_id', '');
+if(strlen($dance_id) < 1 && strlen($combined_move_id) < 1){
     ?>
     <div class="column message bg-primary text-light p-2 rounded border d-none">
     	Missing a selected dance!
 	</div>
     <?php
     die();
-} 
+}
+
 $moves = \Core\DB::execute("select * from foot_move");
-$dance = \Core\DB::execute("select * from dance where dance_id = :dance_id",["dance_id" => $dance_id]);
-$dance = $dance[0];
-$dance_pieces = \Core\DB::execute("select * from dance_piece inner join foot_move using (foot_move_id) where dance_id = :dance_id order by dance_piece_position asc", ["dance_id" => $dance_id]);
-$directions = ["","↙", "↓", "↘", "←", "-", "→", "↖", "↑", "↗"];
+
+$combined_move = [];
+$combined_pieces = [];
+if(strlen($combined_move_id) > 0){
+    $combined_move = \Core\DB::execute("select * from combined_move where combined_move_id = :combined_move_id", ['combined_move_id' => $combined_move_id]);
+    $combined_move = $combined_move[0];
+    $combined_pieces = \Core\DB::execute("select * from combined_move_to_foot_move inner join foot_move using (foot_move_id) where combined_move_id = :combined_move_id order by combined_move_to_foot_move_id asc", ['combined_move_id' => $combined_move_id]);
+}
+
+$dance = [];
+$dance_pieces = [];
+if(strlen($dance_id) > 0){
+    $dance = \Core\DB::execute("select * from dance where dance_id = :dance_id",["dance_id" => $dance_id]);
+    $dance = $dance[0];
+    $dance_pieces = \Core\DB::execute("select * from dance_piece inner join foot_move using (foot_move_id) where dance_id = :dance_id order by dance_piece_id asc", ["dance_id" => $dance_id]);
+}
+
+
+$directions = ["","↙", "↓", "↘", "←", "-", "→", "↖", "↑", "↗", "S"];
 //$rotate_right = "↻ ";
 //$rotate_left = "↺ ";
 $dance_cookie = \Core\Input::GetCookie("dancebuilder", '{"dance_piece_facing_direction":"5","dance_piece_moving_direction":"5","msg":""}');
@@ -24,9 +41,10 @@ $initial_moving_direction = $dance_cookie->dance_piece_moving_direction;
 ?>
 <script>
 var dance_id = "<?php echo $dance_id ?>";
+var combined_move_id = "<?php echo $combined_move_id ?>";
 var dance_piece_facing_direction = <?php echo $initial_facing_direction ?>;
 var dance_piece_moving_direction = <?php echo $initial_moving_direction ?>;
-var update_dance_piece_id = -1;
+var update_piece_id = -1;
 
 $(function() {
 	$(".moving_buttons button[data-num='<?php echo $initial_moving_direction ?>']").removeClass("btn-default");
@@ -58,11 +76,76 @@ $(function() {
     $(".dance_piece_button").click(function() {
     	$(".dance_piece_button").removeClass("border-danger");
     	$(this).addClass("border-danger");
-    	update_dance_piece_id = $(this).attr("data-id");
+    	update_piece_id = $(this).attr("data-id");
     });
     
+    
+    <?php if(strlen($combined_move_id) > 0){ ?>
+
     $(".update_move_button").click(function() {
-    	if(update_dance_piece_id != -1){
+    	if(update_piece_id != -1){
+    		var foot_move_id = $(".foot_move_id").val();
+        	$.ajax({
+              method: "POST",
+              url: "/linesite/dancebuilder/ajax_dancebuilder_update_combined_move.php",
+              data: {
+              	combined_move_id: combined_move_id,
+              	combined_move_to_foot_move_id: update_piece_id,
+              	foot_move_id: foot_move_id,
+    			combined_move_to_foot_move_direction: dance_piece_moving_direction
+              }
+            })
+              .done(function( data ) {
+              	try{
+              		data = JSON.parse(data);
+              	} catch (e) {
+                  	$(".message").html(data);
+                  	$(".message").removeClass("d-none");
+                  	return;
+              	}
+              	var cookie_data = {
+              	dance_piece_facing_direction: dance_piece_facing_direction, 
+              	dance_piece_moving_direction: dance_piece_moving_direction,
+              	msg: data.msg};
+              	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
+              	location.reload(); 
+              });
+    	}
+    });
+    $(".add_move_button").click(function() {
+    	var foot_move_id = $(".foot_move_id").val();
+    	$.ajax({
+          method: "POST",
+          url: "/linesite/dancebuilder/ajax_dancebuilder_insert_combined_move.php",
+          data: {
+          	combined_move_id: combined_move_id,
+          	foot_move_id: foot_move_id,
+    			combined_move_to_foot_move_direction: dance_piece_moving_direction
+          }
+        })
+          .done(function( data ) {
+          	try{
+          		data = JSON.parse(data);
+          	} catch (e) {
+              	$(".message").html(data);
+              	$(".message").removeClass("d-none");
+              	return;
+          	}
+          	var cookie_data = {
+          	dance_piece_facing_direction: dance_piece_facing_direction, 
+          	dance_piece_moving_direction: dance_piece_moving_direction,
+          	msg: data.msg};
+          	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
+          	location.reload(); 
+          });
+    });
+    
+    <?php } ?>
+    
+    <?php if(strlen($dance_id) > 0){ ?>
+    
+    $(".update_move_button").click(function() {
+    	if(update_piece_id != -1){
     		var foot_move_id = $(".foot_move_id").val();
     		var dance_piece_length = $(".dance_piece_length").val();
         	$.ajax({
@@ -70,7 +153,7 @@ $(function() {
               url: "/linesite/dancebuilder/ajax_dancebuilder_update_move.php",
               data: {
               	dance_id: dance_id,
-              	dance_piece_id: update_dance_piece_id,
+              	dance_piece_id: update_piece_id,
               	foot_move_id: foot_move_id, 
               	dance_piece_facing_direction: dance_piece_facing_direction,
     			dance_piece_moving_direction: dance_piece_moving_direction,
@@ -124,6 +207,8 @@ $(function() {
           	location.reload(); 
           });
     });
+    
+    <?php } ?>
 });
 </script>
 <style>
@@ -148,6 +233,18 @@ $(function() {
 
 <div class="mx-5 my-4">
 	<div class="container-fluid">
+		<div class="row">
+        	<div class="col">
+        		<?php 
+        		if(strlen($dance_id) > 0){ 
+        		    echo "Dance -" . $dance['dance_name'];
+        		} 
+        		if(strlen($combined_move_id) > 0){
+        		    echo "Combined Move - " . $combined_move["combined_move_name"];
+        		}
+        		?>
+        	</div>
+    	</div>
     	<div class="row">
         	<div class="col message bg-primary text-light p-2 rounded border <?php echo strlen($dance_cookie->msg) > 1 ? "" : "d-none" ?>">
         		<?php echo $dance_cookie->msg ?>
@@ -156,9 +253,16 @@ $(function() {
     	<div class="row">
         	<div class="col">
         		<div class="row w-100 dance_pieces">
-					<?php foreach ( $dance_pieces as $current_piece){ ?>
+					<?php foreach ($dance_pieces as $current_piece){ ?>
 					<div class="col <?php echo $current_piece['dance_piece_length'] == 1 ? "col8th" : "col16th" ?> rounded border dance_piece_button" data-id="<?php echo $current_piece['dance_piece_id']?>">
 						<?php echo $current_piece['foot_move_name'] . " F".$directions[$current_piece['dance_piece_facing_direction']] . " M".$directions[$current_piece['dance_piece_moving_direction']]?>
+					</div>
+					<?php } ?>
+				</div>
+				<div class="row w-100 dance_pieces">
+					<?php foreach ($combined_pieces as $current_piece){ ?>
+					<div class="col col16th rounded border dance_piece_button" data-id="<?php echo $current_piece['combined_move_to_foot_move_id']?>">
+						<?php echo $current_piece['foot_move_name'] . " M". $directions[$current_piece['combined_move_to_foot_move_direction']]?>
 					</div>
 					<?php } ?>
 				</div>
@@ -186,35 +290,42 @@ $(function() {
 			<div class="col-4 moving_buttons">
 				Moving Direction
 				<div class="row">
-					<div class="col-4">
+					<div class="col-3">
+    				</div>
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="7">Forward-Left</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="8">Forward</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="9">Forward-Right</button>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-4">
+					<div class="col-3">
+						<button class="btn btn-default w-100 m-2" data-num="10">Side</button>
+					</div>
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="4">Left</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="5">-</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="6">Right</button>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-4">
+    				<div class="col-3">
+    				</div>
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="1">Back-Left</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="2">Back</button>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<button class="btn btn-default w-100 m-2" data-num="3">Back-Right</button>
 					</div>
 				</div>
