@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace core;
 
 class Connection_Type {
     const WRITE = 0; // Master

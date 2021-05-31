@@ -30,7 +30,7 @@ if(strlen($dance_id) > 0){
     $dance_pieces = \Core\DB::execute("select * from dance_piece inner join foot_move using (foot_move_id) where dance_id = :dance_id order by dance_piece_id asc", ["dance_id" => $dance_id]);
 }
 
-
+//¼ ½ ¾ 
 $directions = ["","↙", "↓", "↘", "←", "-", "→", "↖", "↑", "↗", "S"];
 //$rotate_right = "↻ ";
 //$rotate_left = "↺ ";
@@ -79,20 +79,13 @@ $(function() {
     	update_piece_id = $(this).attr("data-id");
     });
     
-    
-    <?php if(strlen($combined_move_id) > 0){ ?>
-
-    $(".update_move_button").click(function() {
-    	if(update_piece_id != -1){
-    		var foot_move_id = $(".foot_move_id").val();
-        	$.ajax({
+	$(".delete_button").click(function() {
+    	var dance_piece_id = $(this).parent().attr("data-id");
+    	$.ajax({
               method: "POST",
-              url: "/linesite/dancebuilder/ajax_dancebuilder_update_combined_move.php",
+              url: "/linesite/dancebuilder/ajax_dancebuilder_delete_move.php",
               data: {
-              	combined_move_id: combined_move_id,
-              	combined_move_to_foot_move_id: update_piece_id,
-              	foot_move_id: foot_move_id,
-    			combined_move_to_foot_move_direction: dance_piece_moving_direction
+              	dance_piece_id: dance_piece_id
               }
             })
               .done(function( data ) {
@@ -110,40 +103,8 @@ $(function() {
               	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
               	location.reload(); 
               });
-    	}
     });
-    $(".add_move_button").click(function() {
-    	var foot_move_id = $(".foot_move_id").val();
-    	$.ajax({
-          method: "POST",
-          url: "/linesite/dancebuilder/ajax_dancebuilder_insert_combined_move.php",
-          data: {
-          	combined_move_id: combined_move_id,
-          	foot_move_id: foot_move_id,
-    			combined_move_to_foot_move_direction: dance_piece_moving_direction
-          }
-        })
-          .done(function( data ) {
-          	try{
-          		data = JSON.parse(data);
-          	} catch (e) {
-              	$(".message").html(data);
-              	$(".message").removeClass("d-none");
-              	return;
-          	}
-          	var cookie_data = {
-          	dance_piece_facing_direction: dance_piece_facing_direction, 
-          	dance_piece_moving_direction: dance_piece_moving_direction,
-          	msg: data.msg};
-          	document.cookie = "dancebuilder=" + JSON.stringify(cookie_data);
-          	location.reload(); 
-          });
-    });
-    
-    <?php } ?>
-    
-    <?php if(strlen($dance_id) > 0){ ?>
-    
+
     $(".update_move_button").click(function() {
     	if(update_piece_id != -1){
     		var foot_move_id = $(".foot_move_id").val();
@@ -182,7 +143,7 @@ $(function() {
     	var dance_piece_length = $(".dance_piece_length").val();
     	$.ajax({
           method: "POST",
-          url: "/linesite/dancebuilder/ajax_dancebuilder_add_move.php",
+          url: "/linesite/dancebuilder/ajax_dancebuilder_insert_move.php",
           data: {
           	dance_id: dance_id,
           	foot_move_id: foot_move_id, 
@@ -208,7 +169,6 @@ $(function() {
           });
     });
     
-    <?php } ?>
 });
 </script>
 <style>
@@ -256,6 +216,7 @@ $(function() {
 					<?php foreach ($dance_pieces as $current_piece){ ?>
 					<div class="col <?php echo $current_piece['dance_piece_length'] == 1 ? "col8th" : "col16th" ?> rounded border dance_piece_button" data-id="<?php echo $current_piece['dance_piece_id']?>">
 						<?php echo $current_piece['foot_move_name'] . " F".$directions[$current_piece['dance_piece_facing_direction']] . " M".$directions[$current_piece['dance_piece_moving_direction']]?>
+						<span class="text-danger delete_button">X</span>
 					</div>
 					<?php } ?>
 				</div>
@@ -263,6 +224,7 @@ $(function() {
 					<?php foreach ($combined_pieces as $current_piece){ ?>
 					<div class="col col16th rounded border dance_piece_button" data-id="<?php echo $current_piece['combined_move_to_foot_move_id']?>">
 						<?php echo $current_piece['foot_move_name'] . " M". $directions[$current_piece['combined_move_to_foot_move_direction']]?>
+						<button class="btn btn-default text-danger">X</button>
 					</div>
 					<?php } ?>
 				</div>

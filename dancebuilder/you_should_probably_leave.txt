@@ -1,0 +1,4 @@
+1 2 & 3 4 5 6 & 7 8 side together step cross hold side together step cross hold
+1 2 3 & 4 5 6 7 & 8 rock replace tripple-step step step tripple-step(1/4 turn left)
+1 2 3 & 4 5 6 7 & 8 rock replace(1/2 turn left) tripple step(1/2 turn left) step lock tripple step
+1 2 3 4 5 6 7 & 8 rock replace step(1/4 turn left) step(1/2 turn left) step(1/2 turn left) behind tripple step

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace core;
 
 class DB {
     private static $previous_write_override_value = false;
