@@ -1,8 +1,8 @@
 <?php
 namespace dancebuilder;
 require_once (__DIR__ . "/../apptop.php");
-$dance_id = \Core\Input::Get('dance_id', '');
-$combined_move_id = \Core\Input::Get('combined_move_id', '');
+$dance_id = \core\Input::Get('dance_id', '');
+$combined_move_id = \core\Input::Get('combined_move_id', '');
 if(strlen($dance_id) < 1 && strlen($combined_move_id) < 1){
     ?>
     <div class="column message bg-primary text-light p-2 rounded border d-none">
@@ -12,29 +12,29 @@ if(strlen($dance_id) < 1 && strlen($combined_move_id) < 1){
     die();
 }
 
-$moves = \Core\DB::execute("select * from foot_move");
+$moves = \core\DB::execute("select * from foot_move");
 
 $combined_move = [];
 $combined_pieces = [];
 if(strlen($combined_move_id) > 0){
-    $combined_move = \Core\DB::execute("select * from combined_move where combined_move_id = :combined_move_id", ['combined_move_id' => $combined_move_id]);
+    $combined_move = \core\DB::execute("select * from combined_move where combined_move_id = :combined_move_id", ['combined_move_id' => $combined_move_id]);
     $combined_move = $combined_move[0];
-    $combined_pieces = \Core\DB::execute("select * from combined_move_to_foot_move inner join foot_move using (foot_move_id) where combined_move_id = :combined_move_id order by combined_move_to_foot_move_id asc", ['combined_move_id' => $combined_move_id]);
+    $combined_pieces = \core\DB::execute("select * from combined_move_to_foot_move inner join foot_move using (foot_move_id) where combined_move_id = :combined_move_id order by combined_move_to_foot_move_id asc", ['combined_move_id' => $combined_move_id]);
 }
 
 $dance = [];
 $dance_pieces = [];
 if(strlen($dance_id) > 0){
-    $dance = \Core\DB::execute("select * from dance where dance_id = :dance_id",["dance_id" => $dance_id]);
+    $dance = \core\DB::execute("select * from dance where dance_id = :dance_id",["dance_id" => $dance_id]);
     $dance = $dance[0];
-    $dance_pieces = \Core\DB::execute("select * from dance_piece inner join foot_move using (foot_move_id) where dance_id = :dance_id order by dance_piece_id asc", ["dance_id" => $dance_id]);
+    $dance_pieces = \core\DB::execute("select * from dance_piece inner join foot_move using (foot_move_id) where dance_id = :dance_id order by dance_piece_id asc", ["dance_id" => $dance_id]);
 }
 
 //¼ ½ ¾ 
 $directions = ["","↙", "↓", "↘", "←", "-", "→", "↖", "↑", "↗", "S"];
 //$rotate_right = "↻ ";
 //$rotate_left = "↺ ";
-$dance_cookie = \Core\Input::GetCookie("dancebuilder", '{"dance_piece_facing_direction":"5","dance_piece_moving_direction":"5","msg":""}');
+$dance_cookie = \core\Input::GetCookie("dancebuilder", '{"dance_piece_facing_direction":"5","dance_piece_moving_direction":"5","msg":""}');
 $dance_cookie = json_decode($dance_cookie);
 $initial_facing_direction = $dance_cookie->dance_piece_facing_direction;
 $initial_moving_direction = $dance_cookie->dance_piece_moving_direction;

@@ -1,12 +1,12 @@
 <?php
 require_once (__DIR__ . "/../apptop.php");
 
-$input = \Core\Input::GetAll();
+$input = \core\Input::GetAll();
 
 if (array_key_exists('table_name', $input) && strlen($input['table_name']) > 0) {
     $table_name = $input['table_name'];
     unset($input['table_name']);
-    $new_id = \Core\DB::BasicInsert($table_name, $input);
+    $new_id = \core\DB::BasicInsert($table_name, $input);
     if($new_id > 0){
         ?>
         Successfully added a entry to <?= $table_name ?> <br>
@@ -20,6 +20,6 @@ if (array_key_exists('table_name', $input) && strlen($input['table_name']) > 0) 
 }
 else {
     
-    \Core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
+    \core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
 }
 ?>

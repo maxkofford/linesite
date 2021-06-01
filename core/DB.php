@@ -78,7 +78,7 @@ class DB {
      *            Any additional options.
      * @return null|\PDO The PDO object
      *        
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     public static function get_pdo($connection_type = Connection_Type::WRITE, $options = array()) {
         $is_invalid_connection_type = $connection_type !== Connection_Type::WRITE && $connection_type !== Connection_Type::READ && $connection_type !== Connection_Type::REPORTING;
@@ -166,7 +166,7 @@ class DB {
      *            A optional tag to add to errors for this query
      * @return mixed The prepared statement from the query
      *        
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     public static function query($sql, $parameters = array(), $use_reporting = false, $transactional = false, $error_tag = '') {
         $connection_type = Connection_Type::WRITE;
@@ -241,7 +241,7 @@ class DB {
      *            A optional tag to add to errors for this query
      * @return array The array of items that the query return either in array or object form.
      *        
-     * @throws \Core\DBException Thrown when anything goes wrong with the query
+     * @throws \core\DBException Thrown when anything goes wrong with the query
      */
     public static function execute($sql, $parameters = array(), $object = "", $use_reporting = false, $transactional = false, $error_tag = '') {
         // These must be SELECT statements, anything else raises a warning and pushes the request to ::run.
@@ -430,7 +430,7 @@ class DB {
      *            What object class you'd like the results returned ad.
      * @return array|bool The array of items that the query return either in array or object form.
      *        
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     public static function execute_reporting($sql, $parameters = array(), $object = "") {
         return self::execute($sql, $parameters, $object, true);
@@ -448,7 +448,7 @@ class DB {
      *            A optional tag to add to errors for this query
      * @return int The number of rows effected.
      *        
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     public static function run($sql, $parameters = array(), $error_tag = '') {
         $row_count = false;
@@ -585,7 +585,7 @@ class DB {
             $batch_param = [
                 $found_key => array_slice($batch_array, $current_spot, $batch_size)
             ];
-            $rows_affected += \Core\DB::run($sql, array_merge($parameters, $batch_param));
+            $rows_affected += \core\DB::run($sql, array_merge($parameters, $batch_param));
             $current_spot += $batch_size;
 
             // Need to sleep between sets so that the db logs don't build up too quickly.
@@ -605,7 +605,7 @@ class DB {
      *            The parameters used in the $sql query.
      * @return bool|string The id of the last thing inserted.
      *        
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     public static function insert_and_get_id($sql, $parameters = array()) {
         $return_id = false;
@@ -673,17 +673,17 @@ class DB {
      * Object values are allowed if a mapping is provided, the SET parameter builder will expand these.
      * Allowing objects was added to allow for shorter hand field lists and reduce the need for manual expansion.
      *
-     * Example (from a \Core\Order class):
+     * Example (from a \core\Order class):
      * $fields = array(
      *      'customers_email_address' => $this->get_customers_email(),
      *      'customers_telephone' => $this->get_customers_telephone(),
      *      'shipping_address' => array(
      *          'object' => $this->get_shipping_address(),
-     *          'mapping' => \Core\Address::$shipping_address_map
+     *          'mapping' => \core\Address::$shipping_address_map
      *      ),
      *      'billing_address' => array(
      *          'object' => $this->get_billing_address(),
-     *          'mapping' => \Core\Address::$billing_address_map
+     *          'mapping' => \core\Address::$billing_address_map
      *      )
      *  );
      *
@@ -724,17 +724,17 @@ class DB {
      * Object values are allowed if a mapping is provided, the SET parameter builder will expand these.
      * Allowing objects was added to allow for shorter hand field lists and reduce the need for manual expansion.
      *
-     * Example (from a \Core\Order class):
+     * Example (from a \core\Order class):
      * $fields = array(
      *      'customers_email_address' => $this->get_customers_email(),
      *      'customers_telephone' => $this->get_customers_telephone(),
      *      'shipping_address' => array(
      *          'object' => $this->get_shipping_address(),
-     *          'mapping' => \Core\Address::$shipping_address_map
+     *          'mapping' => \core\Address::$shipping_address_map
      *      ),
      *      'billing_address' => array(
      *          'object' => $this->get_billing_address(),
-     *          'mapping' => \Core\Address::$billing_address_map
+     *          'mapping' => \core\Address::$billing_address_map
      *      )
      *  );
      *
@@ -906,7 +906,7 @@ class DB {
      *            A optional tag to add to errors for this query
      *            
      * @return boolean Whether or not to re-run the query.
-     * @throws \Core\DBException
+     * @throws \core\DBException
      */
     private static function check_for_error($sql, $parameters, $prepared_query, $error_tag = '') {
         $needs_reconnect = false;
@@ -945,7 +945,7 @@ class DB {
     /**
      * Logs all pertinent information about the SQL error to the core_db_errors table.
      *
-     * @param \Core\DBException $exception
+     * @param \core\DBException $exception
      *            Everything important is in this object
      */
     public static function log_error(DBException &$exception) {

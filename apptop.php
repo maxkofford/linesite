@@ -6,4 +6,4 @@ define('HTTPS_SERVER', 'https://' . $_SERVER['SERVER_NAME']);
 
 
 
-\Core\HTML::Echo_Header();
+\core\HTML::Echo_Header();

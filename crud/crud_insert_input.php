@@ -1,11 +1,11 @@
 <?php
 require_once (__DIR__ . "/../apptop.php");
 
-$table_name = \Core\Input::Get('table_name', '');
+$table_name = \core\Input::Get('table_name', '');
 
 
 if (strlen($table_name) > 0) {
-    $results = \Core\DB::execute("
+    $results = \core\DB::execute("
     SELECT COLUMN_NAME, IS_NULLABLE, DATA_TYPE
     FROM INFORMATION_SCHEMA.COLUMNS
     WHERE TABLE_SCHEMA = :db_name AND TABLE_NAME = :table_name", [
@@ -33,6 +33,6 @@ if (strlen($table_name) > 0) {
 <?php
 }
 else {
-    \Core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
+    \core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
 }
 ?>
