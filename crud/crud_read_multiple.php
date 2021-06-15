@@ -41,18 +41,17 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
         </style>
         <?php
         $data = $module->get_data_from_input($module_input);
+        if(count($data) > 0){
         ?>
-        <table>
+        <table class="m-2">      	
             <thead>
                 <tr>
                 <?php
-                if(count($data) > 0){
-                    $column_names = array_keys($module->column_name_post_process($data[0]));
-                    foreach($column_names as $column_name){
-                        ?>
-                        <th><?php echo $column_name?></th>
-                        <?php
-                    }
+                $column_names = array_keys($module->column_name_post_process($data[0]));
+                foreach($column_names as $column_name){
+                    ?>
+                    <th><?php echo $column_name?></th>
+                    <?php
                 }
                 ?>
                 </tr>
@@ -64,7 +63,7 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
                 <tr>
                 <?php 
                 $html_pieces = $module->column_html($data_row);
-                foreach($html_pieces as $name => $value){
+                foreach($html_pieces as $value){
                     ?>
                     <td>
                     <?php echo $value?>
@@ -79,6 +78,11 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
 			</tbody>
 		</table>
         <?php 
+        } else {
+            ?>
+            No dances found!
+            <?php
+        }
     } else {
         //redirect to main page
     }
