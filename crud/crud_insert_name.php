@@ -5,3 +5,5 @@ require_once (__DIR__ . "/../apptop.php");
 	<div><span>target table:</span> <input type="text" name="table_name"></div>
 	<div><input type="submit" value="Submit"></div>
 </form>
+
+<?php require_once (__DIR__ . "/../appbottom.php"); ?>

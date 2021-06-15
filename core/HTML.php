@@ -17,6 +17,7 @@ class HTML {
             <HEAD>
                 <link rel="stylesheet" href="\linesite\bootstrap.min.css">
                 <script src="\linesite\jquery-3.6.0.min.js"></script> 
+                <script src="\linesite\bootstrap.min.js"></script> 
             </HEAD>
     		<?php   
         }

@@ -9,3 +9,4 @@ require_once (__DIR__ . "/../apptop.php");
 	<input type="file" name="fileToUpload" id="fileToUpload">
 	<div><input type="submit" value="Submit"></div>
 </form>
+<?php require_once (__DIR__ . "/../appbottom.php"); ?>

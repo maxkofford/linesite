@@ -36,3 +36,4 @@ else {
     \core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
 }
 ?>
+<?php require_once (__DIR__ . "/../appbottom.php"); ?>
