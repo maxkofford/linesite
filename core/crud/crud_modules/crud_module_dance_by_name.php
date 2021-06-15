@@ -15,7 +15,7 @@ class crud_module_dance_by_name extends \core\crud\crud_module {
     
     public function get_data_from_input($input) {
         $dance_song_name = "%" . $input . "%";
-        return \core\DB::execute("SELECT * FROM " . static::table_name . " WHERE dance_song_name LIKE :dance_song_name", ["dance_song_name" => $dance_song_name]);
+        return \core\DB::execute("SELECT * FROM " . static::table_name . " WHERE dance_song_name LIKE :dance_song_name AND dance_is_special = 0", ["dance_song_name" => $dance_song_name]);
     }
     
     /**
@@ -59,7 +59,18 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     $output_data[$name] = new \core\crud\crud_types\crud_type_foot($name, $value);
                     break;
                 case "dance_is_special":
-                    $output_data[$name] = new \core\crud\crud_types\crud_type_bool($name, $value);
+                    if(\core\Permissions::permission_level() == \core\Permissions::admin){
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_bool($name, $value);
+                    } else {
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_hide($name, $value);
+                    }
+                    break;
+                case "dance_id":
+                    if(\core\Permissions::permission_level() == \core\Permissions::admin){
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_string($name, $value);
+                    } else {
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_hide($name, $value);
+                    }
                     break;
                 default:
                     $output_data[$name] = new \core\crud\crud_types\crud_type_string($name, $value);

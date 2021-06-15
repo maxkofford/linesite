@@ -12,6 +12,7 @@ return array(
     'core\\DBException' => $baseDir . '/core/DBException.php',
     'core\\HTML' => $baseDir . '/core/HTML.php',
     'core\\Input' => $baseDir . '/core/Input.php',
+    'core\\Permissions' => $baseDir . '/core/Permissions.php',
     'core\\crud\\crud_module' => $baseDir . '/core/crud/crud_module.php',
     'core\\crud\\crud_module_manager' => $baseDir . '/core/crud/crud_module_manager.php',
     'core\\crud\\crud_modules\\crud_module_dance_by_name' => $baseDir . '/core/crud/crud_modules/crud_module_dance_by_name.php',

@@ -1,4 +1,5 @@
 <?php
+namespace crud;
 require_once (__DIR__ . "/../apptop.php");
 
 $input = \core\Input::GetAll();
@@ -47,11 +48,15 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
             <thead>
                 <tr>
                 <?php
-                $column_names = array_keys($module->column_name_post_process($data[0]));
-                foreach($column_names as $column_name){
-                    ?>
-                    <th><?php echo $column_name?></th>
-                    <?php
+                $typed_data = $module->get_column_types($data[0]);
+                $typed_data = $module->column_name_post_process($typed_data);
+                
+                foreach($typed_data as $name => $value){
+                    if(is_object($value) && strpos(get_class($value), "crud_type_hide") === false ){
+                        ?>
+                        <th><?php echo $name?></th>
+                        <?php
+                    }
                 }
                 ?>
                 </tr>
@@ -64,11 +69,15 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
                 <?php 
                 $html_pieces = $module->column_html($data_row);
                 foreach($html_pieces as $value){
+                    if($value !== false){
                     ?>
                     <td>
-                    <?php echo $value?>
+                    <?php
+                    echo $value;
+                    ?>
                     </td>
                     <?php  
+                    }
                 }
                 ?>
                 </tr>
@@ -79,17 +88,26 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
 		</table>
         <?php 
         } else {
-            ?>
-            No dances found!
-            <?php
+            echo_no_found();
         }
     } else {
-        //redirect to main page
+        echo_no_found();
     }
 }
 else {
-    //redirect to main page
-    \core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
+    echo_no_found();
+}
+
+function echo_no_found(){
+    ?>
+    <div class="container-fluid">
+    	<div class="h1">No dances found!</div>
+    	Please try again.
+    	<div class="row">
+    	<?php \core\HTML::echo_search_box() ?>
+    	</div>
+	</div>
+    <?php
 }
 ?>
 <?php require_once (__DIR__ . "/../appbottom.php"); ?>

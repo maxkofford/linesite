@@ -13,6 +13,7 @@ class ComposerStaticInitc790af260e9e3ac961b63475f68734bc
         'core\\DBException' => __DIR__ . '/../..' . '/core/DBException.php',
         'core\\HTML' => __DIR__ . '/../..' . '/core/HTML.php',
         'core\\Input' => __DIR__ . '/../..' . '/core/Input.php',
+        'core\\Permissions' => __DIR__ . '/../..' . '/core/Permissions.php',
         'core\\crud\\crud_module' => __DIR__ . '/../..' . '/core/crud/crud_module.php',
         'core\\crud\\crud_module_manager' => __DIR__ . '/../..' . '/core/crud/crud_module_manager.php',
         'core\\crud\\crud_modules\\crud_module_dance_by_name' => __DIR__ . '/../..' . '/core/crud/crud_modules/crud_module_dance_by_name.php',

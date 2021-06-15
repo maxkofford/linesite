@@ -7,13 +7,9 @@ class crud_type_hide extends crud_type {
         $this->name = $name;
         $this->value = $value;
     }
-    
-    public function basic_html($value){       
-        return "";
-    }
-    
+
     public function html() {
-        return $this->basic_html($this->post_process());
+        return false;
     }
 
     public function pre_process() {

@@ -8,6 +8,7 @@ class HTML {
         <meta http-equiv="refresh" content="time; URL=<?= $url ?>" />
         </head>
         <?php
+        die();
     }
 
     
@@ -31,15 +32,25 @@ class HTML {
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Menu
                 </button>
-                <div class="dropdown-menu row" aria-labelledby="dropdownMenu2">
-                	<form class="col" action="/linesite/crud/crud_read_multiple.php" method="post" >
-                    	<input type="search" class="form-control" name="module_input" value="">
-                    	<input type="hidden" name="module" value="dance_by_name">
-                        <button class="btn btn-secondary" type="submit">Search For Dance</button>
-                    </form>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                	<?php static::echo_search_box(); ?>
                 </div>
             </div>
             <?php
         }
+    }
+    
+    public static function echo_search_box(){
+        ?>
+        <form class="col" action="/linesite/crud/crud_read_multiple.php" method="post">
+            <input type="hidden" name="module" value="dance_by_name">
+            <div class="input-group">
+                <input type="search" class="form-control" placeholder="Search for dance here!" name="module_input" value="">
+                <div class="input-group-append">
+                	<button class="btn btn-secondary form-control" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <?php
     }
 }

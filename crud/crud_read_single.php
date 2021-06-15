@@ -1,6 +1,8 @@
 <?php
 require_once (__DIR__ . "/../apptop.php");
-
+if(\core\Permissions::permission_level() != \core\Permissions::admin){
+    \core\HTML::Redirect("/linesite/crud/crud_read_multiple.php");
+}
 $input = \core\Input::GetAll();
 
 if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
@@ -13,7 +15,6 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
     }
 }
 else {
-    
-    \core\HTML::Redirect("/linesite/crud/crud_insert_name.php");
+    \core\HTML::Redirect("/linesite/crud/crud_read_multiple.php");
 }
 ?>

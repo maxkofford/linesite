@@ -1,6 +1,9 @@
 <?php
 namespace dancebuilder;
 require_once (__DIR__ . "/../apptop.php");
+if(\core\Permissions::permission_level() != \core\Permissions::admin){
+    \core\HTML::Redirect("/linesite/crud/crud_read_multiple.php");
+}
 $dance_id = \core\Input::Get('dance_id', '');
 $combined_move_id = \core\Input::Get('combined_move_id', '');
 if(strlen($dance_id) < 1 && strlen($combined_move_id) < 1){
