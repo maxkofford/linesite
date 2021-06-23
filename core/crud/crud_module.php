@@ -4,6 +4,7 @@ namespace core\crud;
 abstract class crud_module {
     public abstract function get_module_name();
     public abstract function get_table_name();
+    public abstract function get_row_title_name();
     public abstract function get_column_types($data);
     public abstract function get_data_from_input($input);
     public function column_name_pre_process($data) {
@@ -31,6 +32,7 @@ abstract class crud_module {
         
         return $output_data;
     }
+    
     public function column_html($data){    
         $typed_data = $this->get_column_types($data);
         $typed_data = $this->column_name_post_process($typed_data);

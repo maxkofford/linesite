@@ -10,7 +10,7 @@ class crud_type_link extends crud_type_string {
     
     public function basic_html($value){  
         if(strlen($this->value) > 0){
-            return "<a class='' data-name='". $this->name." 'href='".$value."'>". parent::basic_html($value)."</a>";
+            return "<a class='' data-name='". $this->name." 'href='".$value."' target='_blank'>". parent::basic_html($value)."</a>";
         } else {
             return "";
         }

@@ -4,6 +4,7 @@ namespace core\crud\crud_modules;
 class crud_module_dance_by_name extends \core\crud\crud_module {
     const table_name = "dance";
     const module_name = "dance_by_name";
+    const row_title_name = "dance_song_name";
 
     public function get_table_name() {
         return static::table_name;
@@ -11,11 +12,17 @@ class crud_module_dance_by_name extends \core\crud\crud_module {
     public function get_module_name() {
         return static::module_name;
     }
+    public function get_row_title_name() {
+        return static::row_title_name;
+    }
     
     
     public function get_data_from_input($input) {
         $dance_song_name = "%" . $input . "%";
-        return \core\DB::execute("SELECT * FROM " . static::table_name . " WHERE dance_song_name LIKE :dance_song_name AND dance_is_special = 0", ["dance_song_name" => $dance_song_name]);
+        return \core\DB::execute("
+SELECT * FROM dance WHERE 
+(dance_song_name LIKE :dance_song_name OR dance_artist LIKE :dance_song_name) 
+AND dance_is_special = 0", ["dance_song_name" => $dance_song_name]);
     }
     
     /**
@@ -26,18 +33,33 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
      * @return string[]
      */
     public function get_column_name_transform(){
-        return ["dance_id" => "dance_id",
-                "dance_song_name" => "dance_song_name",
-                "dance_artist" => "dance_artist",
-                "dance_song_youtube_id" => "dance_song_youtube_link",
-                "dance_name" => "dance_name",
-                "dance_counts" => "dance_counts",
-                "dance_wall_count" => "dance_wall_count",
-                "dance_starting_foot" => "dance_starting_foot",
-                "dance_youtube_id" => "dance_instructions_youtube_link",
-                "dance_move_sheet_link" => "dance_move_sheet_link",
-                "dance_author_name" => "dance_author_name",
-                "dance_is_special" => "dance_is_special",];
+        if(\core\Permissions::permission_level() == \core\Permissions::admin){
+            return ["dance_id" => "dance_id",
+                    "dance_song_name" => "dance_song_name",
+                    "dance_artist" => "dance_artist",
+                    "dance_song_youtube_id" => "dance_song_youtube_id",
+                    "dance_name" => "dance_name",
+                    "dance_counts" => "dance_counts",
+                    "dance_wall_count" => "dance_wall_count",
+                    "dance_starting_foot" => "dance_starting_foot",
+                    "dance_youtube_id" => "dance_instructions_youtube_id",
+                    "dance_move_sheet_link" => "dance_move_sheet_link",
+                    "dance_author_name" => "dance_author_name",
+                    "dance_is_special" => "dance_is_special",];
+        } else {
+            return ["dance_id" => "dance_id",
+                    "dance_song_name" => "Song Name",
+                    "dance_artist" => "Song Performer",
+                    "dance_song_youtube_id" => "Song Youtube",
+                    "dance_name" => "Dance Name",
+                    "dance_counts" => "Dance Counts",
+                    "dance_wall_count" => "Wall Counts",
+                    "dance_starting_foot" => "Starting Weight Foot",
+                    "dance_youtube_id" => "Instructions Youtube",
+                    "dance_move_sheet_link" => "Move Sheet Link",
+                    "dance_author_name" => "Dance Choreographer",
+                    "dance_is_special" => "dance_is_special",];
+        }
     }
     
     
@@ -81,6 +103,8 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
         
         return $output_data;
     }
+
+
     
 
 }
