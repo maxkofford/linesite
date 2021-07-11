@@ -18,11 +18,19 @@ class crud_module_dance_by_name extends \core\crud\crud_module {
     
     
     public function get_data_from_input($input) {
+        if($input == "all"){
+            return \core\DB::execute("
+SELECT * FROM dance WHERE dance_is_special = 0 ORDER BY dance_song_name ASC");
+        }
+        
         $dance_song_name = "%" . $input . "%";
         return \core\DB::execute("
 SELECT * FROM dance WHERE 
-(dance_song_name LIKE :dance_song_name OR dance_artist LIKE :dance_song_name) 
-AND dance_is_special = 0", ["dance_song_name" => $dance_song_name]);
+(dance_song_name LIKE :dance_song_name 
+OR dance_artist LIKE :dance_song_name
+OR dance_name LIKE :dance_song_name) 
+AND dance_is_special = 0
+ORDER BY dance_song_name ASC", ["dance_song_name" => $dance_song_name]);
     }
     
     /**
@@ -80,6 +88,9 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                 case "dance_starting_foot":
                     $output_data[$name] = new \core\crud\crud_types\crud_type_foot($name, $value);
                     break;
+                case "dance_wall_count":
+                    $output_data[$name] = new \core\crud\crud_types\crud_type_walls($name, $value);
+                    break;
                 case "dance_is_special":
                     if(\core\Permissions::permission_level() == \core\Permissions::admin){
                         $output_data[$name] = new \core\crud\crud_types\crud_type_bool($name, $value);
@@ -95,7 +106,7 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     }
                     break;
                 default:
-                    $output_data[$name] = new \core\crud\crud_types\crud_type_string($name, $value);
+                    $output_data[$name] = new \core\crud\crud_types\crud_type_string($name,$value);
                     break;
             }
             

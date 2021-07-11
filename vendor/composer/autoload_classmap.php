@@ -25,5 +25,6 @@ return array(
     'core\\crud\\crud_types\\crud_type_hide' => $baseDir . '/core/crud/crud_types/crud_type_hide.php',
     'core\\crud\\crud_types\\crud_type_link' => $baseDir . '/core/crud/crud_types/crud_type_link.php',
     'core\\crud\\crud_types\\crud_type_string' => $baseDir . '/core/crud/crud_types/crud_type_string.php',
+    'core\\crud\\crud_types\\crud_type_walls' => $baseDir . '/core/crud/crud_types/crud_type_walls.php',
     'core\\crud\\crud_types\\crud_type_youtube' => $baseDir . '/core/crud/crud_types/crud_type_youtube.php',
 );

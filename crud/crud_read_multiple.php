@@ -23,7 +23,7 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
 }
 else {
     ?>
-    <div class="h1">Welcome to the iron cookie!</div>
+    <div class="h1">Welcome to the Max's iron cookie!</div>
     <div class="row">
     <?php \core\HTML::echo_search_box() ?>
 	</div>

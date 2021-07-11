@@ -21,11 +21,57 @@ class HTML {
                 <link rel="stylesheet" href="\linesite\bootstrap.min.css">
                 <script src="\linesite\jquery-3.6.0.min.js"></script> 
                 <script src="\linesite\bootstrap.bundle.js"></script>
+                <title>the ironcookie</title>
+                <meta name="description" content="for all your iron flavored cookie needs">
+                <style>              
+                    .container {
+                      padding-left: 1rem;
+                      padding-right: 1rem;
+                    }
+                    
+                    .row {
+                      margin-left: -1rem;
+                      margin-right: -1rem;
+                    }
+                    
+                    [class^="col-"], .col {
+                      padding-left: 1rem;
+                      padding-right: 1rem;
+                    }
+                    
+                    .no-gutters {
+                      margin-left: 0;
+                      margin-right: 0;
+                    }
+                    
+                    @media (min-width: 62em) {
+                      .container {
+                        width: 970px;
+                        max-width:62rem;
+                      }
+                    }
+                    .no-padding {
+                      	padding:0 0 0 0;
+                      }
+                    .media-heading a{
+                      font-family: inherit;
+                      font-weight: 500;
+                      line-height: 1.1;
+                      font-size: 18px;
+                    }
+                </style>
             </HEAD>
             <body>
             	<div class="container" style="min-height: 200px;">
     		<?php   
         }
+    }
+    
+    public static function echo_footer() {
+        ?>
+            </div>
+        </body>
+    	<?php
     }
     
     public static function echo_dropdown_menu(){
@@ -65,6 +111,7 @@ class HTML {
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                 	<?php static::echo_search_box(); ?>
+                	<a class="row col py-2 no-gutters" href="/linesite/crud/crud_read_multiple.php?module=dance_by_name&module_input=all">All Dances</a>
                 	<?php if(\core\Permissions::permission_level() == \core\Permissions::admin){ ?>
                 	<a class="row col py-2 no-gutters" href="/linesite/whit/sedar_search.php">Sedar Search</a>
                 	<?php } ?>

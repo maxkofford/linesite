@@ -26,6 +26,7 @@ class ComposerStaticInitc790af260e9e3ac961b63475f68734bc
         'core\\crud\\crud_types\\crud_type_hide' => __DIR__ . '/../..' . '/core/crud/crud_types/crud_type_hide.php',
         'core\\crud\\crud_types\\crud_type_link' => __DIR__ . '/../..' . '/core/crud/crud_types/crud_type_link.php',
         'core\\crud\\crud_types\\crud_type_string' => __DIR__ . '/../..' . '/core/crud/crud_types/crud_type_string.php',
+        'core\\crud\\crud_types\\crud_type_walls' => __DIR__ . '/../..' . '/core/crud/crud_types/crud_type_walls.php',
         'core\\crud\\crud_types\\crud_type_youtube' => __DIR__ . '/../..' . '/core/crud/crud_types/crud_type_youtube.php',
     );
 

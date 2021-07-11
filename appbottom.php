@@ -1,4 +1,3 @@
 <?php
+\core\HTML::echo_footer();
 ?>
-	</div>
-</body>

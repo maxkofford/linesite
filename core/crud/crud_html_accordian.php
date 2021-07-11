@@ -82,7 +82,7 @@ class crud_html_accordian {
                             	<div class="col-6 text-right"><?php echo $name?>: </div>
                             	<div class="col-6">
                                 <?php
-                                echo str_replace("'", "", trim($value));
+                                echo trim($value);
                                 ?>
                             	</div>
                             </div>
