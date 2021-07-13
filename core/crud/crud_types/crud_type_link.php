@@ -27,6 +27,10 @@ class crud_type_link extends crud_type_string {
     public function post_process() {
         return $this->value;
     }
+    
+    public function to_string(){
+        return $this->post_process();
+    }
 
     
 }

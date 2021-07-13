@@ -1,7 +1,7 @@
 <?php
 namespace core\crud\crud_modules;
 
-class crud_module_dance_by_name extends \core\crud\crud_module {
+class crud_module_dance_by_name extends \core\crud\crud_modules\crud_module {
     const table_name = "dance";
     const module_name = "dance_by_name";
     const row_title_name = "dance_song_name";

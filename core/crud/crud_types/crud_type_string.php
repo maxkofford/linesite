@@ -23,6 +23,10 @@ class crud_type_string extends crud_type {
     public function post_process() {
         return $this->value;
     }
+    
+    public function to_string(){
+        return $this->post_process();
+    }
 
     
 }

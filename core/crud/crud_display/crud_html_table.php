@@ -1,9 +1,13 @@
 <?php
-namespace core\crud;
+namespace core\crud\crud_display;
 
-class crud_html_table {
-
-    public static function echo_crud_multiple($module, $module_input){
+class crud_html_table extends crud_display {
+    const display_name = "crud_html_table";
+    
+    public function get_display_name() {
+        return static::module_name;
+    }
+    public function echo_crud_multiple(\core\crud\crud_modules\crud_module $module, $module_input){
         ?>
         <style>
            

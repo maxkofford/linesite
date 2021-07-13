@@ -1,5 +1,5 @@
 <?php
-namespace core\crud;
+namespace core\crud\crud_modules;
 
 abstract class crud_module {
     public abstract function get_module_name();
@@ -46,6 +46,21 @@ abstract class crud_module {
         }
         return $output_data;
     }
+    
+    public function column_string($data){
+        $typed_data = $this->get_column_types($data);
+        $typed_data = $this->column_name_post_process($typed_data);
+        $output_data = [];
+        foreach($typed_data as $name => $value){
+            if(is_object($value)){
+                $output_data[$name] = $value->to_string();
+            } else {
+                $output_data[$name] = "<div name='".$name."'>".$value."</div>";
+            }
+        }
+        return $output_data;
+    }
+    
     public function column_pre_process($data) {
         $fixed_name_data = $this->column_name_pre_process($data);
         $typed_data = $this->get_column_types($fixed_name_data);

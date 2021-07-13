@@ -28,5 +28,8 @@ class crud_type_foot extends crud_type_string {
         }
     }
 
+    public function to_string(){
+        return $this->post_process();
+    }
     
 }

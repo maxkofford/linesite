@@ -27,6 +27,10 @@ class crud_type_youtube extends crud_type_link {
             return "";
         }
     }
+    
+    public function to_string(){
+        return $this->post_process();
+    }
 
     
 }

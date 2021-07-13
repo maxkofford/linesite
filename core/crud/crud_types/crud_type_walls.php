@@ -27,6 +27,10 @@ class crud_type_walls extends crud_type_string {
             return $this->value;
         }
     }
+    
+    public function to_string(){
+        return $this->post_process();
+    }
 
     
 }

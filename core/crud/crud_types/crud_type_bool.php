@@ -28,5 +28,7 @@ class crud_type_bool extends crud_type_string {
         }
     }
 
-    
+    public function to_string(){
+        return $this->post_process();
+    }
 }
