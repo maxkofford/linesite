@@ -16,7 +16,7 @@ class crud_csv_generator extends crud_display {
         
         $data = $module->get_data_from_input($module_input);
         if(count($data) > 0){
-            echo count($data);
+            echo count($data) . " rows <br>";
             $output_file = 'max_data.csv';
             
             $fp = fopen($output_file, 'w');

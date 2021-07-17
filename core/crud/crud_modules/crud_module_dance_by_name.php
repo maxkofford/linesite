@@ -23,6 +23,9 @@ class crud_module_dance_by_name extends \core\crud\crud_modules\crud_module {
 SELECT * FROM dance WHERE dance_is_special = 0 ORDER BY dance_song_name ASC");
         }
         
+        
+        \core\DB::run("INSERT INTO search_log (search_log_text, search_log_date) VALUES (:search_log_text, now());", ['search_log_text' => $input]);
+        
         $dance_song_name = "%" . $input . "%";
         return \core\DB::execute("
 SELECT * FROM dance WHERE 
