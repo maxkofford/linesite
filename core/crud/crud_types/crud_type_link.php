@@ -8,11 +8,15 @@ class crud_type_link extends crud_type_string {
         $this->value = $value;
     }
     
-    public function basic_html($value){  
-        if(strlen($this->value) > 0){
-            return "<a class='' data-name='". $this->name." 'href='".$value."' target='_blank'>". parent::basic_html($value)."</a>";
+    public function basic_html($value){
+        if(\core\Permissions::permission_level() == \core\Permissions::admin){
+            return parent::basic_html($value);
         } else {
-            return "";
+            if(strlen($this->value) > 0){
+                return "<a class='' data-name='". $this->name." 'href='".$value."' target='_blank'>". parent::basic_html($value)."</a>";                
+            } else {
+                return "";
+            }
         }
     }
     

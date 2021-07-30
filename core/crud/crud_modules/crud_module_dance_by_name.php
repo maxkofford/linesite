@@ -23,7 +23,6 @@ class crud_module_dance_by_name extends \core\crud\crud_modules\crud_module {
 SELECT * FROM dance WHERE dance_is_special = 0 ORDER BY dance_song_name ASC");
         }
         
-        
         \core\DB::run("INSERT INTO search_log (search_log_text, search_log_date) VALUES (:search_log_text, now());", ['search_log_text' => $input]);
         
         $dance_song_name = "%" . $input . "%";
@@ -56,7 +55,11 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     "dance_youtube_id" => "dance_instructions_youtube_id",
                     "dance_move_sheet_link" => "dance_move_sheet_link",
                     "dance_author_name" => "dance_author_name",
-                    "dance_is_special" => "dance_is_special",];
+                    "dance_is_special" => "dance_is_special",
+                    "dance_bpm" => "dance_bpm",
+                    "dance_duration" => "dance_duration",
+                    "user_id" => "user_id",
+            ];
         } else {
             return ["dance_id" => "dance_id",
                     "dance_song_name" => "Song Name",
@@ -69,7 +72,11 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     "dance_youtube_id" => "Instructions Youtube",
                     "dance_move_sheet_link" => "Move Sheet Link",
                     "dance_author_name" => "Dance Choreographer",
-                    "dance_is_special" => "dance_is_special",];
+                    "dance_is_special" => "dance_is_special",
+                    "dance_bpm" => "dance_bpm",
+                    "dance_duration" => "dance_duration",
+                    "user_id" => "user_id",
+            ];
         }
     }
     
@@ -102,6 +109,11 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     }
                     break;
                 case "dance_id":
+                    $output_data[$name] = new \core\crud\crud_types\crud_type_main_id($name, $value);
+                    break;
+                case "dance_bpm":
+                case "dance_duration":
+                case "user_id":
                     if(\core\Permissions::permission_level() == \core\Permissions::admin){
                         $output_data[$name] = new \core\crud\crud_types\crud_type_string($name, $value);
                     } else {

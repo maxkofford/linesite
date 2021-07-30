@@ -36,6 +36,37 @@ class crud_html_table extends crud_display {
                 background: linear-gradient(#fff, #ccc);
             }
         </style>
+        <script>
+        	var table_name="<?php echo $module->get_table_name() ?>";
+        	$( document ).ready(function() {
+                $(".editable").change(function() {
+					console.log("da name:" + $(this).attr("name"));
+					console.log("da name:" + $(this).val());
+					console.log("da name:" + table_name);
+					var id_name = table_name + "_id";
+					var id = "";
+					var current = $(this).parent();
+					
+					var times = 0;
+					while(id.length < 1 && times < 100){
+						times++;
+						var target = current.find("[name='"+id_name+"'");
+						if(target.length > 0){
+							id = target.html();
+						} else {
+							if(current.parent() != document){
+								current = current.parent();
+							} else {
+								break;
+							}
+						}
+					}
+					
+					console.log("da name:" + times);
+					console.log("da name:" + id);
+                });
+            });	
+        </script>
         <?php
         $data = $module->get_data_from_input($module_input);
         if(count($data) > 0){
