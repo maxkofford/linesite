@@ -112,6 +112,8 @@ class HTML {
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                 	<?php static::echo_search_box(); ?>
                 	<a class="row col py-2 no-gutters" href="/linesite/crud/crud_read_multiple.php?module=dance_by_name&module_input=all&display=crud_html_accordian">All Dances</a>
+                	<br>
+                	<a class="row col py-2 no-gutters" href="/swingomatic/">Swing Dance Stuff</a>
                 	<?php if(\core\Permissions::permission_level() == \core\Permissions::admin){ ?>
                 	<a class="row col py-2 no-gutters" href="/linesite/whit/sedar_search.php">Sedar Search</a>
                 	<?php } ?>
