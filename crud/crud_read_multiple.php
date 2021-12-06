@@ -11,12 +11,19 @@ if (array_key_exists('module', $input) && strlen($input['module']) > 0 &&
     $module_input = $input['module_input'];
     
     $display = $input['display'];
-    
+
     $module = \core\crud\crud_module_manager::get_target_module($module);
+   
     if($module !== false){
         $display = \core\crud\crud_module_manager::get_target_display($display);
         
         if($display !== false){
+            
+            if(array_key_exists('action', $input) && strlen($input['action']) > 0){
+                if($input['action'] == 'update_single');
+                $display->update_data($module, \core\Input::GetPOST());
+            }
+            
             $table = $display->echo_crud_multiple($module, $module_input);
             if(!$table){
                 echo_no_found();

@@ -7,6 +7,24 @@ abstract class crud_module {
     public abstract function get_row_title_name();
     public abstract function get_column_types($data);
     public abstract function get_data_from_input($input);
+    
+    public function bulk_update_row($bulk_input){
+//         $name_transform = $this->get_column_name_transform();
+//         foreach($bulk_input as $name => $value){
+//             if(array_key_exists($name, $name_transform)){
+//                 $cleaned_input[$name] = $value;
+//             }
+//         }
+        $cleaned_input = $this->column_pre_process($bulk_input);
+        \core\DB::batch_insert([$cleaned_input], $this->get_table_name(), 2);
+    }
+    
+    //nothing atm
+    public function delete_row($bulk_input){
+        //
+    }
+    
+    
     public function column_name_pre_process($data) {
         $output_data = [];
         $name_transform = $this->get_column_name_transform();
@@ -24,6 +42,8 @@ abstract class crud_module {
         $name_transform = $this->get_column_name_transform();
         foreach($data as $name => $value){
             if(array_key_exists($name, $name_transform)){
+                /* @var $value \core\crud\crud_types\crud_type */
+                $value->set_name($name_transform[$name]);
                 $output_data[$name_transform[$name]] = $value;
             } else {
                 $output_data[$name] = $value;

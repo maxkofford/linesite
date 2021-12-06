@@ -24,6 +24,14 @@ class Input {
         return array_merge($_GET,$_POST);
     }
     
+    public static function GetPOST(){
+        return $_POST;
+    }
+    
+    public static function GetGET(){
+        return $_GET;
+    }
+    
     public static function GetCookie($cookie_name, $default_value){
         if(array_key_exists($cookie_name, $_COOKIE)){
             return $_COOKIE[$cookie_name];

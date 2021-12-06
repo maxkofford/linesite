@@ -3,16 +3,11 @@ namespace core\crud\crud_types;
 
 class crud_type_select extends crud_type_string {
     
-    public function __construct($name, $value){
-        $this->name = $name;
-        $this->value = $value;
-    }
-    
     public function basic_html_select($options){
         if(\core\Permissions::permission_level() == \core\Permissions::admin){
-            $full_html = "<select class='editable' name='".$this->name."'>";
+            $full_html = "<select class='editable crud_piece' name='".$this->name."'>";
             foreach($options as $value => $display){
-                $full_html .= "<option ".($this->value == $value ? "selected" : "")." value='".$value."'>".$display."</option>";
+                $full_html .= "<option ".($this->value == $value ? "selected" : "")." value='".$display."'>".$display."</option>";
             }
             $full_html .= "</select>";
             return $full_html;

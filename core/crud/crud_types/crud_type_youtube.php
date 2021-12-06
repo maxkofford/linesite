@@ -3,11 +3,6 @@ namespace core\crud\crud_types;
 
 class crud_type_youtube extends crud_type_link {
     
-    public function __construct($name, $value){
-        $this->name = $name;
-        $this->value = $value;
-    }
-    
     public function html() {
         return parent::basic_html($this->post_process());
     }

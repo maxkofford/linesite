@@ -667,6 +667,15 @@ class DB {
         return $new_id;
     }
     
+    /**
+     * Does a basic delete using the table's id
+     * @param string $table_name
+     * @param array $data array of data containing at least the table's id associative pair
+     */
+    public static function BasicDelete($table_name, $data){
+        
+    }
+    
     
     /**
      * Updates the object with the $fields info. $fields must be a table_column => value array.
@@ -770,6 +779,7 @@ class DB {
         
         return $success;
     }
+    
 
     /**
      * Is injection safe (assuming column names and table name are not user input), doesnt require columns array, and has update_duplicates in addition to ignore duplicates

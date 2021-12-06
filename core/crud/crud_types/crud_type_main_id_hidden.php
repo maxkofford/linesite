@@ -1,10 +1,10 @@
 <?php
 namespace core\crud\crud_types;
 
-class crud_type_main_id extends crud_type {
+class crud_type_main_id_hidden extends crud_type {
     
     public function basic_html($value){
-        return "<input class='crud_piece bg-light' type='text' name='".$this->name."' value='".$value."' readonly>";
+        return "<input class='crud_piece' type='text' style='display:none;' name='".$this->name."' value='".$value."' readonly>";
     }
     
     public function html() {

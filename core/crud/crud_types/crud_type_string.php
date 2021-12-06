@@ -3,14 +3,9 @@ namespace core\crud\crud_types;
 
 class crud_type_string extends crud_type {
     
-    public function __construct($name, $value){
-        $this->name = $name;
-        $this->value = $value;
-    }
-    
     public function basic_html($value){
         if(\core\Permissions::permission_level() == \core\Permissions::admin){
-            return "<div name='".$this->name."'><input class='editable' name='".$this->name."' type='text' value='".$value."'></div>";
+            return "<div name='".$this->name."'><input class='editable crud_piece' name='".$this->name."' type='text' value='".$value."'></div>";
         } else {
             return "<div name='".$this->name."'>".$value."</div>";
         }

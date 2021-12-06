@@ -9,13 +9,14 @@ class crud_module_dance_by_name extends \core\crud\crud_modules\crud_module {
     public function get_table_name() {
         return static::table_name;
     }
+    
     public function get_module_name() {
         return static::module_name;
     }
+    
     public function get_row_title_name() {
         return static::row_title_name;
     }
-    
     
     public function get_data_from_input($input) {
         if($input == "all"){
@@ -87,8 +88,6 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
         foreach($data as $name => $value){
             switch($name){
                 case "dance_song_youtube_id":
-                    $output_data[$name] = new \core\crud\crud_types\crud_type_youtube($name, $value);
-                    break;
                 case "dance_youtube_id":
                     $output_data[$name] = new \core\crud\crud_types\crud_type_youtube($name, $value);
                     break;
@@ -109,7 +108,11 @@ SELECT concat('"', COLUMN_NAME , '" => "', COLUMN_NAME, '",')
                     }
                     break;
                 case "dance_id":
-                    $output_data[$name] = new \core\crud\crud_types\crud_type_main_id($name, $value);
+                    if(\core\Permissions::permission_level() == \core\Permissions::admin){
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_main_id($name, $value);
+                    } else {
+                        $output_data[$name] = new \core\crud\crud_types\crud_type_main_id_hidden($name, $value);
+                    }
                     break;
                 case "dance_bpm":
                 case "dance_duration":

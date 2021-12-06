@@ -11,8 +11,6 @@ class crud_csv_generator extends crud_display {
 
     
     public function echo_crud_multiple(\core\crud\crud_modules\crud_module $module, $module_input){
-        ?>
-        <?php
         
         $data = $module->get_data_from_input($module_input);
         if(count($data) > 0){
@@ -54,5 +52,9 @@ class crud_csv_generator extends crud_display {
         } else {
             return false;
         }
+    }
+    
+    public function update_data(\core\crud\crud_modules\crud_module $module, $input) {
+        $module->bulk_update_row($input);
     }
 }

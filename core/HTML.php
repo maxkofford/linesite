@@ -137,4 +137,16 @@ class HTML {
         </form>
         <?php
     }
+    
+    public static function get_current_page(){
+        return $_SERVER['REQUEST_URI'];
+    }
+    
+    public static function get_current_full_url(){
+        return $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+    
+    public static function get_current_query_string(){
+        return $_SERVER['QUERY_STRING'];
+    }
 }

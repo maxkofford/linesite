@@ -3,11 +3,6 @@ namespace core\crud\crud_types;
 
 class crud_type_bool extends crud_type_select {
     
-    public function __construct($name, $value){
-        $this->name = $name;
-        $this->value = $value;
-    }
-    
     public function get_select_options(){
         return ["False",
                 "True"];

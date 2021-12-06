@@ -86,25 +86,42 @@ class crud_html_table extends crud_display {
                     }
                 }
                 ?>
+                	<th><?php echo "Save Changes"?></th>
                 </tr>
             </thead>
 			<tbody>
             <?php
             foreach($data as $data_row){
                 ?>
-                <tr>
-                <?php 
+                <tr class="crud_row">
+                <?php
+    			if(\core\Permissions::permission_level() == \core\Permissions::admin){
+                    ?>
+    				<form action="<?php echo \core\HTML::get_current_page()?>" method="post">
+                	<?php 
+    			}
                 $html_pieces = $module->column_html($data_row);
                 foreach($html_pieces as $value){
                     if($value !== false){
                     ?>
                     <td>
                     <?php
-                    echo str_replace("'", "", trim($value));
+                    echo trim($value);
                     ?>
                     </td>
                     <?php  
                     }
+                }
+                if(\core\Permissions::permission_level() == \core\Permissions::admin){
+                    ?>
+                        <td>
+                        	<input style="display:none;" name="action" value="update_single">
+                            <div class="row justify-content-md-center">
+        						<button class="col-2 btn" type="submit" value="Submit">Save</button>
+        					</div>
+    					</td>
+					 </form>
+                    <?php
                 }
                 ?>
                 </tr>
@@ -118,5 +135,13 @@ class crud_html_table extends crud_display {
         } else {
             return false;
         }
+    }
+    
+    public function update_data(\core\crud\crud_modules\crud_module $module, $input) {
+        $module->bulk_update_row($input);
+    }
+    
+    public function delete(\core\crud\crud_modules\crud_module $module, $input) {
+        $module->bulk_update_row($input);
     }
 }
